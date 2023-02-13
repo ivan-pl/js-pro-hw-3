@@ -39,4 +39,33 @@ describe("getPath()", () => {
     appendElements(div1, div2);
     checkExpectations(div1, "div.some-class");
   });
+
+  it("returns main div", () => {
+    const main = document.createElement("main");
+    const div1 = document.createElement("div");
+    const div2 = document.createElement("div");
+    main.append(div1);
+    appendElements(main, div2);
+    checkExpectations(div1, "main div");
+  });
+
+  it("returns ul:nth-child(2) li.some-class:nth-child(3)", () => {
+    const html = `
+      <article>
+        <ul>
+          <li class="some-class">1</li>
+          <li class="some-class">2</li>
+          <li class="some-class">3</li>
+        </ul>
+        <ul>
+          <li class="some-class">1</li>
+          <li class="some-class">2</li>
+          <li class="some-class" id="test-id">3</li>
+        </ul>
+      </article>
+    `;
+    document.body.innerHTML = html;
+    const el = document.getElementById("test-id")!;
+    checkExpectations(el, "ul:nth-child(2) li.some-class:nth-child(3)");
+  });
 });

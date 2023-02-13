@@ -1,22 +1,29 @@
 export default function getPath(el: HTMLElement): string {
-  const curEl = el;
-  const uniqueSelector = "";
+  let curEl = el;
+  let uniqueSelector = "";
   do {
     let curSelector = curEl.nodeName.toLowerCase();
-    let newSelector = curSelector + uniqueSelector;
+    let newUniqueSelector =
+      curSelector + `${uniqueSelector ? " " + uniqueSelector : ""}`;
 
-    if (isUniqueSelector(newSelector)) return newSelector;
+    if (isUniqueSelector(newUniqueSelector)) return newUniqueSelector;
 
     const className = getClassName(curEl);
     curSelector += className;
-    newSelector = curSelector;
-    if (isUniqueSelector(newSelector)) return newSelector;
+    newUniqueSelector =
+      curSelector + `${uniqueSelector ? " " + uniqueSelector : ""}`;
+    if (isUniqueSelector(newUniqueSelector)) return newUniqueSelector;
 
-    const nthChildClass = getNthChildSelector(curEl, newSelector);
+    const nthChildClass = getNthChildSelector(curEl, newUniqueSelector);
     if (nthChildClass) {
-      newSelector = curSelector + nthChildClass;
-      if (isUniqueSelector(newSelector)) return newSelector;
+      newUniqueSelector =
+        curSelector +
+        nthChildClass +
+        `${uniqueSelector ? " " + uniqueSelector : ""}`;
     }
+
+    uniqueSelector = newUniqueSelector;
+    curEl = curEl.parentElement!;
   } while (!isUniqueSelector(uniqueSelector));
 
   return uniqueSelector;
@@ -35,7 +42,7 @@ function getNthChildSelector(
     return "";
   }
 
-  const ind = [...parent.childNodes].indexOf(childEl);
+  const ind = [...parent.children].indexOf(childEl);
   return `:nth-child(${ind + 1})`;
 }
 
