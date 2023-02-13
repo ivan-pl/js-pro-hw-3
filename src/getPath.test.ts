@@ -11,6 +11,10 @@ const checkExpectations = (el: HTMLElement, cssSelector: string): void => {
 };
 
 describe("getPath()", () => {
+  beforeEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("returns div", () => {
     const div = document.createElement("div");
     const p = document.createElement("p");
@@ -26,5 +30,13 @@ describe("getPath()", () => {
     appendElements(ul);
     checkExpectations(li1, "li:nth-child(1)");
     checkExpectations(li2, "li:nth-child(2)");
+  });
+
+  it("returns div.some-class", () => {
+    const div1 = document.createElement("div");
+    div1.classList.add("some-class");
+    const div2 = document.createElement("div");
+    appendElements(div1, div2);
+    checkExpectations(div1, "div.some-class");
   });
 });
